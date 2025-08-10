@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="region">
+
+    <div class="logo"><span>🐾 Pet Verse</span></div>
+    <ul class="list">
+        <li data-id="0" class="li font-active">主页</li>
+        <li data-id="1" class="li">物资</li>
+        <li data-id="2" class="li">皮肤</li>
+        <li data-id="3" class="li">充值</li>
+    </ul>
+
+    <header>
+        <div class="gold">🧈 黄金: 100</div>
+        <div class="diamond">💎 钻石: 50</div>
+        <div class="point">📜 点卷: 0</div>
+    </header>
+
+    <main>
+        <section class="index">
+
+            <div class="message">
+                <div class="attribute">属性: 火</div>
+                <div class="value">身价: 5 万</div>
+                <div class="rank-strengthen">等级: 1 级</div>
+                <div class="rank-advanced">进阶: 0</div>
+                <div class="life">生命力: 100</div>
+                <div class="attack">攻击力: 10</div>
+            </div>
+            <div class="animal-box">
+                <div class="animal">🐕</div>
+            </div>
+            <footer>
+                <button class="strengthen">强化</button>
+                <button class="advanced">进阶</button>
+            </footer>
+        </section>
+
+        <section class="substance region-active">
+            <ul class="substance-list">
+                <li class="substance-li"><span class="image">🧈</span><span class="font">黄金<br/>x 1000</span>
+                    <button data-id="0" class="btn">📜500</button>
+                </li>
+                <li class="substance-li"><span class="image">💎</span><span class="font">钻石<br/>x 500</span>
+                    <button data-id="1" class="btn">📜500</button>
+                </li>
+            </ul>
+        </section>
+
+        <section class="skin region-active">
+            <div class="skin-tap">
+                <span data-id="0" class="skin-tap-item skin-font-active">我的皮肤</span>
+                <span data-id="1" class="skin-tap-item">皮肤商店</span>
+            </div>
+            <div class="skin-lists">
+                <ul class="my-skin"></ul>
+                <ul class="skin-list skin-active"></ul>
+            </div>
+        </section>
+
+        <section class="top-up region-active">
+            <ul class="top-up-list">
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 10</span>
+                    <button class="bn">$1</button>
+                </li>
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 60</span>
+                    <button class="bn">$6</button>
+                </li>
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 300</span>
+                    <button class="bn">$30</button>
+                </li>
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 1980</span>
+                    <button class="bn">$198</button>
+                </li>
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 3280</span>
+                    <button class="bn">$328</button>
+                </li>
+                <li class="top-up-li">
+                    <span class="img">📜</span>
+                    <span class="f">点卷<br/>x 6480</span>
+                    <button class="bn">$648</button>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <div class="dock">
+        <section class="strengthen-region footer-active">
+            <button class="strengthen-return">X</button>
+            <div class="strengthen-material">
+                <h1>强化所需:</h1>
+                <span class="material-gold">🧈 300</span>
+            </div>
+            <p>1 级 ➞ 2 级</p>
+            <button class="strengthen-btn">开始强化</button>
+        </section>
+        <section class="advanced-region footer-active">
+            <button class="advanced-return">X</button>
+            <div class="advanced-material">
+                <h1>进阶所需:</h1>
+                <span class="material-diamond">💎 500</span>
+            </div>
+            <p>0 阶 ➞ 1 阶</p>
+            <span style="color: rgba(128,128,128,0.53);">失败降级!</span>
+            <span class="fail-rate">成功率: 95%</span>
+            <button class="advanced-btn">开始强化</button>
+        </section>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
