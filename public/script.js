@@ -19,7 +19,7 @@ const skinArr = [
     {emoji: '🦏', cost: 7000, sound: 'audio/ox.mp3'},
     {emoji: '🐘', cost: 6800, sound: 'audio/elephant.mp3'},
     {emoji: '🪼', cost: 4000, sound: 'audio/jellyfish.mp3'},
-    {emoji: '🦨', cost: 3200, sound: 'skunk.mp3'},
+    {emoji: '🦨', cost: 3200, sound: 'audio/skunk.mp3'},
     {emoji: '🦈', cost: 7500, sound: 'audio/huge water.mp3'},
     {emoji: '🦒', cost: 5400, sound: 'audio/rApache.mp3'},
     {emoji: '🦔', cost: 2500, sound: 'audio/hedgehog.mp3'},
