@@ -73,8 +73,8 @@ const getStockpile = (uname, defaultValue = null) => {
 }
 
 // 基础属性
-const baseHP = 100
-const baseATK = 50
+let baseHP = 100
+let baseATK = 50
 const baseValue = 5
 
 // 从本地或页面获取资源/等级
@@ -112,7 +112,7 @@ const getStatsFixed = (baseHP, baseATK, rate, level) => {
 
 // 计算身价（进阶+20%/级）
 const getAdvancedValue = (baseValue, advancedLevel) => {
-    const advancedRate = 0.2
+    const advancedRate = 10
     return Math.floor(baseValue * (1 + advancedRate * advancedLevel))
 }
 
@@ -122,6 +122,12 @@ const strengthenUpdate = () => {
     const nowCost = strengthenCost(nowGrade)
     materialGold.textContent = `🧈 ${nowCost}`
     const statsFixed = getStatsFixed(baseHP, baseATK, 0.1, nowGrade)
+    if(statsFixed.hp > 10000) {
+        statsFixed.hp = (statsFixed.hp / 10000).toFixed(2) + ' 万'
+    }
+    if(statsFixed.atk > 10000) {
+        statsFixed.atk = (statsFixed.atk / 10000).toFixed(2) + ' 万'
+    }
     life.textContent = `生命力: ${statsFixed.hp}`
     attack.textContent = `攻击力: ${statsFixed.atk}`
 }
@@ -134,6 +140,16 @@ const advancedUpdate = () => {
     failRate.textContent = `成功率: ${getNowRate(nowDegree)}%`
     const nowValue = getAdvancedValue(baseValue, nowDegree)
     value.textContent = `身价: ${nowValue} 万`
+    strengthenUpdate()
+}
+
+// 防抖处理
+const debounce = (fn, delay) => {
+    let timer = null;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
 }
 
 // 渲染商店皮肤
@@ -322,9 +338,13 @@ advancedBtn.addEventListener('click', () => {
     const nowRate = getNowRate(nowDegree) / 100
     if (random <= nowRate) {
         alert('进阶成功')
+        baseHP += 50
+        baseATK += 10
         nowDegree++
     } else {
         alert('进阶失败')
+        baseHP -= 50
+        baseATK -= 10
         nowDegree = Math.max(0, --nowDegree)
     }
     rankAdvanced.textContent = `进阶: ${nowDegree}`
@@ -334,28 +354,14 @@ advancedBtn.addEventListener('click', () => {
     advancedUpdate()
 });
 
-const debounce = (fn, delay) => {
-    let timer = null;
-    return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            fn.apply(this, args);
-        }, delay);
-    };
-}
-
+// 动物叫声
 animal.addEventListener('click', debounce(e => {
     const clickedEmoji = e.target.textContent.trim();
     const skin = skinArr.find(s => s.emoji === clickedEmoji);
 
-    if (!skin) {
-        console.warn('没有找到对应的音频:', clickedEmoji);
-        return;
-    }
+    if (!skin) return console.warn('没有找到对应的音频:', clickedEmoji);
 
     const audio = new Audio(skin.sound);
     audio.currentTime = 0;
-    audio.play().catch(err => {
-        console.warn('播放被阻止或失败：', err);
-    });
-}, 1000));
+    audio.play().catch(err => console.warn('播放被阻止或失败：', err))
+}, 500));
