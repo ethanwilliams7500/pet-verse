@@ -3,15 +3,31 @@ const mySkinArr = JSON.parse(localStorage.getItem('arr')) || ['🐕']
 
 // 商店皮肤及价格（点券）
 const skinArr = [
-    {emoji: '🐕', cost: 1000}, {emoji: '🐩', cost: 4700}, {emoji: '🐇', cost: 2400},
-    {emoji: '🐖', cost: 1300}, {emoji: '🐎', cost: 5800}, {emoji: '🐂', cost: 3400},
-    {emoji: '🐅', cost: 6400}, {emoji: '🐆', cost: 8600}, {emoji: '🐒', cost: 3000},
-    {emoji: '🐑', cost: 2500}, {emoji: '🐿️', cost: 1800}, {emoji: '🪼', cost: 4000},
-    {emoji: '🐈', cost: 2200}, {emoji: '🦏', cost: 7000}, {emoji: '🐘', cost: 6800},
-    {emoji: '🦨', cost: 3200}, {emoji: '🦈', cost: 7500}, {emoji: '🦌', cost: 2700},
-    {emoji: '🦒', cost: 5400}, {emoji: '🦔', cost: 2500}, {emoji: '🐍', cost: 2900},
-    {emoji: '🦉', cost: 1800}, {emoji: '🦕', cost: 9000}, {emoji: '🦖', cost: 9800},
-]
+    {emoji: '🐕', cost: 1000, sound: 'audio/dog.mp3'},
+    {emoji: '🐖', cost: 1300, sound: 'audio/pig.mp3'},
+    {emoji: '🐩', cost: 4700, sound: 'audio/dog.mp3'},
+    {emoji: '🐇', cost: 2400, sound: 'audio/rabbit.mp3'},
+    {emoji: '🐎', cost: 5800, sound: 'audio/horse.mp3'},
+    {emoji: '🦌', cost: 2700, sound: 'audio/deer.mp3'},
+    {emoji: '🐂', cost: 3400, sound: 'audio/ox.mp3'},
+    {emoji: '🐅', cost: 7400, sound: 'audio/tiger.mp3'},
+    {emoji: '🐆', cost: 8600, sound: 'audio/leopard.mp3'},
+    {emoji: '🐒', cost: 3000, sound: 'audio/monkey.mp3'},
+    {emoji: '🐑', cost: 2500, sound: 'audio/sheep.mp3'},
+    {emoji: '🐿️', cost: 1800, sound: 'audio/squirrel.mp3'},
+    {emoji: '🐈', cost: 2200, sound: 'audio/cat.mp3'},
+    {emoji: '🦏', cost: 7000, sound: 'audio/ox.mp3'},
+    {emoji: '🐘', cost: 6800, sound: 'audio/elephant.mp3'},
+    {emoji: '🪼', cost: 4000, sound: 'audio/jellyfish.mp3'},
+    {emoji: '🦨', cost: 3200, sound: 'skunk.mp3'},
+    {emoji: '🦈', cost: 7500, sound: 'audio/huge water.mp3'},
+    {emoji: '🦒', cost: 5400, sound: 'audio/rApache.mp3'},
+    {emoji: '🦔', cost: 2500, sound: 'audio/hedgehog.mp3'},
+    {emoji: '🐍', cost: 2900, sound: 'audio/snake.mp3'},
+    {emoji: '🦉', cost: 1800, sound: 'audio/bird.mp3'},
+    {emoji: '🦕', cost: 9000, sound: 'audio/Wanlong.mp3'},
+    {emoji: '🦖', cost: 9800, sound: 'audio/t-rex.mp3'}
+];
 
 // 页面元素
 const main = document.querySelector('.region main')              // 主区
@@ -317,3 +333,29 @@ advancedBtn.addEventListener('click', () => {
     setStockpile('degree', nowDegree)
     advancedUpdate()
 });
+
+const debounce = (fn, delay) => {
+    let timer = null;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fn.apply(this, args);
+        }, delay);
+    };
+}
+
+animal.addEventListener('click', debounce(e => {
+    const clickedEmoji = e.target.textContent.trim();
+    const skin = skinArr.find(s => s.emoji === clickedEmoji);
+
+    if (!skin) {
+        console.warn('没有找到对应的音频:', clickedEmoji);
+        return;
+    }
+
+    const audio = new Audio(skin.sound);
+    audio.currentTime = 0;
+    audio.play().catch(err => {
+        console.warn('播放被阻止或失败：', err);
+    });
+}, 1000));
