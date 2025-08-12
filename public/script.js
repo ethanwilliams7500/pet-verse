@@ -73,8 +73,8 @@ const getStockpile = (uname, defaultValue = null) => {
 }
 
 // 基础属性
-let baseHP = 100
-let baseATK = 50
+let baseHP = getStockpile('game-baseHP') || 100
+let baseATK = getStockpile('game-baseATK') || 50
 const baseValue = 5
 
 // 从本地或页面获取资源/等级
@@ -122,10 +122,10 @@ const strengthenUpdate = () => {
     const nowCost = strengthenCost(nowGrade)
     materialGold.textContent = `🧈 ${nowCost}`
     const statsFixed = getStatsFixed(baseHP, baseATK, 0.1, nowGrade)
-    if(statsFixed.hp > 10000) {
+    if (statsFixed.hp > 10000) {
         statsFixed.hp = (statsFixed.hp / 10000).toFixed(2) + ' 万'
     }
-    if(statsFixed.atk > 10000) {
+    if (statsFixed.atk > 10000) {
         statsFixed.atk = (statsFixed.atk / 10000).toFixed(2) + ' 万'
     }
     life.textContent = `生命力: ${statsFixed.hp}`
@@ -338,19 +338,21 @@ advancedBtn.addEventListener('click', () => {
     const nowRate = getNowRate(nowDegree) / 100
     if (random <= nowRate) {
         alert('进阶成功')
-        baseHP += 50
-        baseATK += 10
+        baseHP += 5
+        baseATK += 1
         nowDegree++
     } else {
         alert('进阶失败')
-        baseHP -= 50
-        baseATK -= 10
+        baseHP = Math.max(100, baseHP -= 5)
+        baseATK = Math.max(50, baseATK -= 1)
         nowDegree = Math.max(0, --nowDegree)
     }
     rankAdvanced.textContent = `进阶: ${nowDegree}`
     diamond.textContent = `💎 钻石: ${diamondNum -= cost}`
     setStockpile('diamond', diamondNum)
     setStockpile('degree', nowDegree)
+    setStockpile('game-baseHP', baseHP)
+    setStockpile('game-baseATK', baseATK)
     advancedUpdate()
 });
 
