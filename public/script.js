@@ -20,7 +20,7 @@ const skinArr = [
     {emoji: '🐘', cost: 6800, sound: 'audio/elephant.mp3'},
     {emoji: '🪼', cost: 4000, sound: 'audio/jellyfish.mp3'},
     {emoji: '🦨', cost: 3200, sound: 'audio/skunk.mp3'},
-    {emoji: '🦈', cost: 7500, sound: 'audio/huge water.mp3'},
+    {emoji: '🦈', cost: 7500, sound: 'audio/huge-water.mp3'},
     {emoji: '🦒', cost: 5400, sound: 'audio/rApache.mp3'},
     {emoji: '🦔', cost: 2500, sound: 'audio/hedgehog.mp3'},
     {emoji: '🐍', cost: 2900, sound: 'audio/snake.mp3'},
@@ -28,6 +28,17 @@ const skinArr = [
     {emoji: '🦕', cost: 9000, sound: 'audio/Wanlong.mp3'},
     {emoji: '🦖', cost: 9800, sound: 'audio/t-rex.mp3'}
 ];
+
+// 皮肤配置表
+const skinConfig = {
+    '🪼': {background: 'img/ocean.jpg', fontSize: '150px'},
+    '🦖': {background: 'img/forest.jpg', fontSize: '250px'},
+    '🦕': {background: 'img/forest.jpg', fontSize: '250px'},
+    '🐘': {background: 'img/forest.jpg', fontSize: '250px'},
+    '🦒': {background: 'img/forest.jpg', fontSize: '250px'},
+    '🦈': {background: 'img/ocean.jpg', fontSize: '250px'},
+    'default': {background: 'img/forest.jpg', fontSize: '150px'},
+};
 
 // 页面元素
 const main = document.querySelector('.region main')              // 主区
@@ -72,17 +83,23 @@ const getStockpile = (uname, defaultValue = null) => {
     }
 }
 
+// 提取数字
+const getNumber = text => {
+    const match = text.match(/\d+/)
+    return match ? Number(match[0]) : 0
+}
+
 // 基础属性
 const baseHP = 100
 const baseATK = 50
 const baseValue = 5
 
 // 从本地或页面获取资源/等级
-let pointNum = getStockpile('game-point') || +point.textContent.split(' ')[2]
-let goldNum = getStockpile('game-gold') || +gold.textContent.split(' ')[2]
-let diamondNum = getStockpile('game-diamond') || +diamond.textContent.split(' ')[2]
-let nowGrade = getStockpile('game-grade') || +rankStrengthen.textContent.split(' ')[1]
-let nowDegree = getStockpile('game-degree') || +rankAdvanced.textContent.split(' ')[1]
+let pointNum = getStockpile('game-point') || getNumber(point.textContent);
+let goldNum = getStockpile('game-gold') || getNumber(gold.textContent);
+let diamondNum = getStockpile('game-diamond') || getNumber(diamond.textContent);
+let nowGrade = getStockpile('game-grade') || getNumber(rankStrengthen.textContent);
+let nowDegree = getStockpile('game-degree') || getNumber(rankAdvanced.textContent);
 animal.textContent = getStockpile('game-animal') || mySkinArr[0]
 animalBox.style.backgroundImage = getStockpile('game-environment') || 'url("img/forest.jpg")'
 animal.style.fontSize = getStockpile('game-animalSize') || '150px'
@@ -157,7 +174,7 @@ const renderSkinList = () => {
     skinList.innerHTML = skinArr.map(({emoji, cost}) => {
         const owned = mySkinArr.includes(emoji)
         return `
-            <li class="my-skin-li">
+            <li class="my-skin-li" data-id="${emoji}" data-price="${cost}">
                 ${emoji}
                 <button class="skin-li-btn ${owned ? 'li-font-active' : ''}" ${owned ? 'disabled' : ''}>
                     ${owned ? '已拥有' : `📜${cost}`}
@@ -186,7 +203,7 @@ const handleMySkin = () => {
 const createMySkin = () => {
     mySkin.innerHTML = mySkinArr.map(item => {
         return `
-            <li class="my-skin-li">
+            <li class="my-skin-li" data-id="${item}">
                 ${item}
                 <button class="my-skin-btn">更换</button>
             </li>
@@ -217,33 +234,30 @@ list.addEventListener('click', e => {
 
 // 点券充值
 topList.addEventListener('click', e => {
-    const {tagName} = e.target
+    const {tagName, parentNode} = e.target
     if (tagName !== 'BUTTON') return
     if (!confirm('确认要支付吗？')) return
-    const num = +e.target.parentNode.textContent.split('$')[1] * 10
+    const num = +parentNode.dataset.point
     point.innerHTML = `📜 点卷: ${pointNum += num}`
     setStockpile('game-point', pointNum)
 })
 
 // 黄金/钻石兑换
 substanceList.addEventListener('click', e => {
-    const {tagName, dataset} = e.target
+    const {tagName, dataset, parentNode} = e.target
     if (tagName !== 'BUTTON') return
     if (!confirm('确认要购买吗？')) return
-    let num = +e.target.textContent.split('📜')[1]
-    console.log(num)
-    if (pointNum < num) return alert('你的点券不足')
-    point.innerHTML = `📜 点卷: ${pointNum -= num}`
+
+    const num = +parentNode.dataset.num
+    const price = +parentNode.dataset.point
+    if (pointNum < price) return alert('你的点券不足')
+    point.innerHTML = `📜 点卷: ${pointNum -= price}`
     setStockpile('game-point', pointNum)
-    if (+dataset.id === 0) {
-        num *= 2
-        gold.innerHTML = `🧈 黄金: ${goldNum += num}`
-        setStockpile('game-gold', goldNum)
-    } else {
-        num *= 1
-        diamond.innerHTML = `💎 钻石: ${diamondNum += num}`
-        setStockpile('game-diamond', diamondNum)
-    }
+
+    const owned = dataset.id === 'gold'
+
+    owned ? gold.textContent = `🧈 黄金: ${goldNum += num}` : diamond.innerHTML = `💎 钻石: ${diamondNum += num}`
+    owned ? setStockpile('game-gold', goldNum) : setStockpile('game-diamond', diamondNum)
 })
 
 // 皮肤标签切换
@@ -258,42 +272,32 @@ skinTap.addEventListener('click', e => {
 
 // 购买皮肤
 skinList.addEventListener('click', e => {
-    const {tagName} = e.target
+    const {tagName, parentNode} = e.target
     if (tagName !== 'BUTTON') return
     if (!confirm('确认要购买此皮肤吗？')) return
-    let num = +e.target.textContent.split('📜')[1]
+    const num = +parentNode.dataset.price
+
     if (pointNum < num) return alert('你的点券不足')
     point.innerHTML = `📜 点卷: ${pointNum -= num}`
     setStockpile('game-point', pointNum)
-    mySkinArr.push(e.target.parentNode.firstChild.textContent.trim())
+    mySkinArr.push(parentNode.dataset.id)
+
     setStockpile('arr', mySkinArr)
     init()
 })
 
 // 更换皮肤
 mySkin.addEventListener('click', e => {
-    const {tagName} = e.target
+    const {tagName, parentNode} = e.target
     if (tagName !== 'BUTTON') return
-    const selectedSkin = e.target.parentNode.firstChild.textContent.trim()
+    const selectedSkin = parentNode.dataset.id
+    console.log(selectedSkin)
     animal.textContent = selectedSkin
-    switch (true) {
-        case ['🪼'].includes(selectedSkin):
-            animalBox.style.backgroundImage = 'url("img/ocean.jpg")'
-            animal.style.fontSize = '150px'
-            break
-        case ['🦖', '🦕', '🪼', '🐘', '🦒'].includes(selectedSkin):
-            animalBox.style.backgroundImage = 'url("img/forest.jpg")'
-            animal.style.fontSize = '250px'
-            break
-        case ['🦈'].includes(selectedSkin):
-            animalBox.style.backgroundImage = 'url("img/ocean.jpg")'
-            animal.style.fontSize = '250px'
-            break
-        default:
-            animalBox.style.backgroundImage = 'url("img/forest.jpg")'
-            animal.style.fontSize = '150px'
-            break
-    }
+
+    const {background, fontSize} = skinConfig[selectedSkin] || skinConfig.default
+    animalBox.style.backgroundImage = `url(${background})`
+    animal.style.fontSize = fontSize
+
     document.querySelector('.btn-font-active').classList.remove('btn-font-active')
     setStockpile('game-animal', selectedSkin)
     setStockpile('game-environment', animalBox.style.backgroundImage)
@@ -320,7 +324,7 @@ mySkin.addEventListener('click', e => {
 
 // 强化
 strengthenBtn.addEventListener('click', () => {
-    const cost = +materialGold.textContent.split(' ')[1]
+    const cost = getNumber(materialGold.textContent)
     if (goldNum < cost) return alert('材料不足')
     alert('强化成功')
     gold.textContent = `🧈 黄金: ${goldNum -= cost}`
@@ -332,7 +336,7 @@ strengthenBtn.addEventListener('click', () => {
 
 // 进阶
 advancedBtn.addEventListener('click', () => {
-    const cost = +materialDiamond.textContent.split(' ')[1]
+    const cost = getNumber(materialDiamond.textContent)
     if (diamondNum < cost) return alert('材料不足')
     const random = Math.random()
     const nowRate = getNowRate(nowDegree) / 100

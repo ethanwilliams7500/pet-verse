@@ -52,11 +52,15 @@
 
         <section class="substance region-active">
             <ul class="substance-list">
-                <li class="substance-li"><span class="image">🧈</span><span class="font">黄金<br/>x 1000</span>
-                    <button data-id="0" class="btn">📜500</button>
+                <li class="substance-li" data-num="1000" data-point="500">
+                    <span class="image">🧈</span>
+                    <span class="font">黄金<br/>x 1000</span>
+                    <button data-id="gold" class="btn">📜500</button>
                 </li>
-                <li class="substance-li"><span class="image">💎</span><span class="font">钻石<br/>x 500</span>
-                    <button data-id="1" class="btn">📜500</button>
+                <li class="substance-li" data-num="500" data-point="500">
+                    <span class="image">💎</span>
+                    <span class="font">钻石<br/>x 500</span>
+                    <button data-id="diamond" class="btn">📜500</button>
                 </li>
             </ul>
         </section>
@@ -81,39 +85,41 @@
                 <div class="trade-image">
                     <button>选择物品</button>
                 </div>
-                <div class="price">定价: 💎 <input type="number"></div>
+                <div class="price">定价: 💎
+                    <input type="number">
+                </div>
                 <button class="trade-btn">出售</button>
             </div>
         </section>
 
         <section class="top-up region-active">
             <ul class="top-up-list">
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="10">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 10</span>
                     <button class="bn">$1</button>
                 </li>
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="60">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 60</span>
                     <button class="bn">$6</button>
                 </li>
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="300">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 300</span>
                     <button class="bn">$30</button>
                 </li>
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="1980">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 1980</span>
                     <button class="bn">$198</button>
                 </li>
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="3280">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 3280</span>
                     <button class="bn">$328</button>
                 </li>
-                <li class="top-up-li">
+                <li class="top-up-li" data-point="6480">
                     <span class="img">📜</span>
                     <span class="f">点卷<br/>x 6480</span>
                     <button class="bn">$648</button>
