@@ -73,19 +73,19 @@ const getStockpile = (uname, defaultValue = null) => {
 }
 
 // 基础属性
-let baseHP = getStockpile('game-baseHP') || 100
-let baseATK = getStockpile('game-baseATK') || 50
+const baseHP = 100
+const baseATK = 50
 const baseValue = 5
 
 // 从本地或页面获取资源/等级
-let pointNum = getStockpile('point') || +point.textContent.split(' ')[2]
-let goldNum = getStockpile('gold') || +gold.textContent.split(' ')[2]
-let diamondNum = getStockpile('diamond') || +diamond.textContent.split(' ')[2]
-let nowGrade = getStockpile('grade') || +rankStrengthen.textContent.split(' ')[1]
-let nowDegree = getStockpile('degree') || +rankAdvanced.textContent.split(' ')[1]
-animal.textContent = getStockpile('animal') || mySkinArr[0]
-animalBox.style.backgroundImage = getStockpile('environment') || 'url("img/forest.jpg")'
-animal.style.fontSize = getStockpile('animalSize') || '150px'
+let pointNum = getStockpile('game-point') || +point.textContent.split(' ')[2]
+let goldNum = getStockpile('game-gold') || +gold.textContent.split(' ')[2]
+let diamondNum = getStockpile('game-diamond') || +diamond.textContent.split(' ')[2]
+let nowGrade = getStockpile('game-grade') || +rankStrengthen.textContent.split(' ')[1]
+let nowDegree = getStockpile('game-degree') || +rankAdvanced.textContent.split(' ')[1]
+animal.textContent = getStockpile('game-animal') || mySkinArr[0]
+animalBox.style.backgroundImage = getStockpile('game-environment') || 'url("img/forest.jpg")'
+animal.style.fontSize = getStockpile('game-animalSize') || '150px'
 
 // 初始化显示
 gold.textContent = `🧈 黄金: ${goldNum}`
@@ -222,7 +222,7 @@ topList.addEventListener('click', e => {
     if (!confirm('确认要支付吗？')) return
     const num = +e.target.parentNode.textContent.split('$')[1] * 10
     point.innerHTML = `📜 点卷: ${pointNum += num}`
-    setStockpile('point', pointNum)
+    setStockpile('game-point', pointNum)
 })
 
 // 黄金/钻石兑换
@@ -234,15 +234,15 @@ substanceList.addEventListener('click', e => {
     console.log(num)
     if (pointNum < num) return alert('你的点券不足')
     point.innerHTML = `📜 点卷: ${pointNum -= num}`
-    setStockpile('point', pointNum)
+    setStockpile('game-point', pointNum)
     if (+dataset.id === 0) {
         num *= 2
         gold.innerHTML = `🧈 黄金: ${goldNum += num}`
-        setStockpile('gold', goldNum)
+        setStockpile('game-gold', goldNum)
     } else {
         num *= 1
         diamond.innerHTML = `💎 钻石: ${diamondNum += num}`
-        setStockpile('diamond', diamondNum)
+        setStockpile('game-diamond', diamondNum)
     }
 })
 
@@ -264,7 +264,7 @@ skinList.addEventListener('click', e => {
     let num = +e.target.textContent.split('📜')[1]
     if (pointNum < num) return alert('你的点券不足')
     point.innerHTML = `📜 点卷: ${pointNum -= num}`
-    setStockpile('point', pointNum)
+    setStockpile('game-point', pointNum)
     mySkinArr.push(e.target.parentNode.firstChild.textContent.trim())
     setStockpile('arr', mySkinArr)
     init()
@@ -295,9 +295,9 @@ mySkin.addEventListener('click', e => {
             break
     }
     document.querySelector('.btn-font-active').classList.remove('btn-font-active')
-    setStockpile('animal', selectedSkin)
-    setStockpile('environment', animalBox.style.backgroundImage)
-    setStockpile('animalSize', animal.style.fontSize)
+    setStockpile('game-animal', selectedSkin)
+    setStockpile('game-environment', animalBox.style.backgroundImage)
+    setStockpile('game-animalSize', animal.style.fontSize)
     handleMySkin()
 });
 
@@ -324,9 +324,9 @@ strengthenBtn.addEventListener('click', () => {
     if (goldNum < cost) return alert('材料不足')
     alert('强化成功')
     gold.textContent = `🧈 黄金: ${goldNum -= cost}`
-    setStockpile('gold', goldNum)
+    setStockpile('game-gold', goldNum)
     rankStrengthen.textContent = `等级: ${++nowGrade}`
-    setStockpile('grade', nowGrade)
+    setStockpile('game-grade', nowGrade)
     strengthenUpdate()
 })
 
@@ -338,21 +338,15 @@ advancedBtn.addEventListener('click', () => {
     const nowRate = getNowRate(nowDegree) / 100
     if (random <= nowRate) {
         alert('进阶成功')
-        baseHP += 5
-        baseATK += 1
         nowDegree++
     } else {
         alert('进阶失败')
-        baseHP = Math.max(100, baseHP -= 5)
-        baseATK = Math.max(50, baseATK -= 1)
         nowDegree = Math.max(0, --nowDegree)
     }
     rankAdvanced.textContent = `进阶: ${nowDegree}`
     diamond.textContent = `💎 钻石: ${diamondNum -= cost}`
-    setStockpile('diamond', diamondNum)
-    setStockpile('degree', nowDegree)
-    setStockpile('game-baseHP', baseHP)
-    setStockpile('game-baseATK', baseATK)
+    setStockpile('game-diamond', diamondNum)
+    setStockpile('game-degree', nowDegree)
     advancedUpdate()
 });
 
