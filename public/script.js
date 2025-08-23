@@ -236,9 +236,45 @@ list.addEventListener('click', e => {
 topList.addEventListener('click', e => {
     const {tagName, parentNode} = e.target
     if (tagName !== 'BUTTON') return
-    if (!confirm('确认要支付吗？')) return
+
+    if (!getStockpile('pet-verse-UniPay-user')) {
+        alert('请先绑定你的UniPay账户')
+        const uniPayUname = String(prompt('输入UniPay的用户名'))
+        const uniPayPassword = String(prompt('输入UniPay的登录密码'))
+        if (!getStockpile(`UniPay-${uniPayUname}-user`)) {
+            alert('用户名输入错误')
+            return;
+        }
+        if (String(uniPayPassword) !== String(getStockpile(`UniPay-${uniPayUname}-user`).password)) {
+            alert('支付密码错误')
+            return;
+        }
+        setStockpile('pet-verse-UniPay-user', uniPayUname)
+
+    }
+
+    const payPassword = prompt('输入UniPay的支付密码')
+    const uniPayCurrent = getStockpile(`UniPay-${getStockpile('pet-verse-UniPay-user')}-user`)
+    const {payPassword: word} = uniPayCurrent
+    const US = +e.target.textContent.split('$')[1]
+
+    if (String(payPassword) !== String(word)) {
+        alert('支付密码错误')
+        return;
+    } else if (uniPayCurrent.balance < US) {
+        if (confirm('余额不足是否要前往UniPay?')) {
+            location.href = 'https://ethanwilliams7500.github.io/uni-pay/public/index.html'
+        }
+        return;
+    } else {
+        alert('支付成功')
+        uniPayCurrent.balance -= US
+        setStockpile(`UniPay-${getStockpile('pet-verse-UniPay-user')}-user`, uniPayCurrent)
+    }
+
     const num = +parentNode.dataset.point
     point.innerHTML = `📜 点卷: ${pointNum += num}`
+
     setStockpile('game-point', pointNum)
 })
 
