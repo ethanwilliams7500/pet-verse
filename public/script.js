@@ -262,9 +262,7 @@ topList.addEventListener('click', e => {
         alert('支付密码错误')
         return;
     } else if (uniPayCurrent.balance < US) {
-        if (confirm('余额不足是否要前往UniPay?')) {
-            location.href = 'https://ethanwilliams7500.github.io/uni-pay/public/index.html'
-        }
+        alert('余额不足');
         return;
     } else {
         alert('支付成功')
