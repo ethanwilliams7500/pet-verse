@@ -255,7 +255,7 @@ topList.addEventListener('click', e => {
 
     const payPassword = prompt('输入UniPay的支付密码')
     const uniPayCurrent = getStockpile(`UniPay-${getStockpile('pet-verse-UniPay-user')}-user`)
-    const {payPassword: word} = uniPayCurrent
+    const {payPassword: word, transactions} = uniPayCurrent
     const US = +e.target.textContent.split('$')[1]
 
     if (String(payPassword) !== String(word)) {
@@ -267,6 +267,12 @@ topList.addEventListener('click', e => {
     } else {
         alert('支付成功')
         uniPayCurrent.balance -= US
+        transactions.push({
+            type: 'game-recharge',
+            game: 'pet-verse',
+            amount: US,
+            date: new Date().toLocaleString()
+        })
         setStockpile(`UniPay-${getStockpile('pet-verse-UniPay-user')}-user`, uniPayCurrent)
     }
 
